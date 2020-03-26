@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+
+</head>
+
+<body>
+	<h1>This is Home page</h1>
+
+
+	<div id="main">
+		<leftsidebar>
+		<div class="row" style="padding: 20px;">
+			<button class="btn btn-info" id="getReqBtn">GET REQUEST (
+				Raw Data )</button>
+
+		</div>
+
+		<div class="row" style="padding: 20px;">
+			<button class="btn btn-primary" id="postReqBtn">POST REQUEST
+				Report 1</button>
+		</div>
+
+		<div class="row" style="padding: 20px;">
+			<button class="btn btn-success" id="postReqBtnRaw">POST
+				REQUEST Report 2</button>
+		</div>
+		</leftsidebar>
+
+		<rightsidebar> </rightsidebar>
+	</div>
+
+
+</body>
+
+
+<script>
+
+
+
+const getReqBtn = document.getElementById('getReqBtn');
+const postReqBtn = document.getElementById('postReqBtn');
+const postReqBtnRaw = document.getElementById('postReqBtnRaw');
+
+const makeHttpRequest = (method, url, data) => {
+
+  const reqPromise = new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url)
+    xhr.responseType = 'json';
+    if (data) {
+      xhr.setRequestHeader('Content-Type', 'application/json');
+    }
+    xhr.onload = () => {
+      if(xhr.status >= 400){
+         reject(xhr.response);
+      }
+      resolve(xhr.response);
+    }
+    xhr.onerror = () => {
+      reject("Technical Error found !");
+    }
+
+    xhr.send(JSON.stringify(data));
+  });
+
+  return reqPromise;
+}
+
+
+
+
+const getDataReq = () => {
+  console.log("getDataReq:");
+  makeHttpRequest('GET', 'http://localhost:9090/report/raw-data', {}).then(resData => {
+    console.log("RES # ", resData);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+
+
+const postDataReq = () => {
+	// Send Request
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'http://localhost:9090/report/report1', true);
+	xhr.responseType = 'arraybuffer';
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onload = function (e) {
+	 
+	// Check status
+	if (this.status == 200) {
+	// convert response to Blob, then create URL from blob.
+	  let file = new Blob([this.response], { type: 'application/pdf' });
+	  var fileURL = URL.createObjectURL(file);
+	  window.open(fileURL);
+	 
+	} else {
+	 
+	console.error('response: ', this);
+	 
+	}
+	};
+	 
+	xhr.send();
+}
+
+
+const postDataReqRaw = () => {
+
+// Send Request
+var xhr = new XMLHttpRequest();
+xhr.open('POST', 'http://localhost:9090/report/report2', true);
+xhr.responseType = 'arraybuffer';
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.onload = function (e) {
+ 
+// Check status
+if (this.status == 200) {
+// convert response to Blob, then create URL from blob.
+  let file = new Blob([this.response], { type: 'application/pdf' });
+  var fileURL = URL.createObjectURL(file);
+  window.open(fileURL);
+ 
+} else {
+ 
+console.error('response: ', this);
+ 
+}
+};
+ 
+xhr.send();
+}
+
+
+
+
+
+
+getReqBtn.addEventListener('click', getDataReq);
+postReqBtn.addEventListener('click', postDataReq);
+postReqBtnRaw.addEventListener('click', postDataReqRaw);
+
+
+
+</script>
+
+</html>

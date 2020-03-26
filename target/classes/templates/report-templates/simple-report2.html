@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Simple Report | Two</title>
+
+</head>
+
+<body>
+	<h1>Report With Server Side Data</h1>
+	<hr>
+	
+		<table>
+		<tbody>
+			<tr>
+				<td>Barcode 01:
+					<img class="barcode-position" th:src="${code1}"
+						type="code128" style="height: 20px; width: 170px; margin-left: 23px;" />
+				</td>
+			</tr>
+			<tr>
+				<td>Barcode 02:
+					<img class="barcode-position" th:src="${code2}" 
+						type="code128" style="height: 20px; width: 170px;" />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<img alt="La Illahlla" src="la-ilaha-illaha.jpg">
+	
+	<div>
+
+	<table class="report-list-all">
+		<tbody>
+			<tr>
+				<td><h4 class="h4-style">Employee List</h4>
+				   
+					<ul>
+						<li style="margin: 15px" th:each="emp : ${empList}">
+							<span th:text="${emp?.id}"></span>
+								<span th:text="${emp?.Name}"></span>
+								<span th:text="${emp?.Gender}"></span>
+							</li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+			
+	</div>
+</body>
+
+</html>
